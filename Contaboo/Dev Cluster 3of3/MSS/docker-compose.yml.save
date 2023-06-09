@@ -1,0 +1,107 @@
+version: '3.3'
+
+services:
+  landing_page2:
+    image: registry.klinkplatform.com/portalv2:alpha-latest
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == vmi650196.contaboserver.net
+      replicas: 1
+      update_config:
+        parallelism: 2
+        delay: 10s
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.services.landing_page2.loadbalancer.server.port=80"
+        - "traefik.http.services.landing_page2.loadbalancer.passHostHeader=true"
+        - "traefik.http.routers.landing_page2.rule=Host(`devk.mss.ba`)"
+        - "traefik.http.routers.landing_page2.entrypoints=web"
+        - "traefik.http.routers.landing_page2.middlewares=traefik-https-redirect"
+        - "traefik.http.routers.landing_page2-secure.rule=Host(`devk.mss.ba`)"
+        - "traefik.http.routers.landing_page2-secure.entrypoints=websecure"
+        - "traefik.http.routers.landing_page2-secure.tls=true"
+        - "traefik.docker.network=PrviNetwork"
+        - "traefik.http.routers.landing_page2-secure.tls.certresolver=myresolver"
+    configs:
+      - source: nginx-config
+        target: /etc/nginx/nginx.conf
+    volumes:
+      - ./30.sh:/docker-entrypoint.d/30.sh
+  deviceblade2old:
+    image: registry.klinkplatform.com/devicesv2:alpha-latest
+    deploy:
+            #  placement:
+            #    constraints:
+            #      - node.role == worker
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 10s
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.services.deviceblade2.loadbalancer.server.port=80"
+        - "traefik.http.routers.deviceblade2.rule=Host(`dev-devices.mss.ba`)"
+        - "traefik.http.routers.deviceblade2.entrypoints=web"
+        - "traefik.http.routers.deviceblade2.middlewares=traefik-https-redirect@file"
+        - "traefik.http.routers.deviceblade2-secure.rule=Host(`dev-devices.mss.ba`)"
+        - "traefik.http.routers.deviceblade2-secure.entrypoints=websecure"
+        - "traefik.http.routers.deviceblade2-secure.tls=true"
+        - "traefik.docker.network=PrviNetwork"
+        - "traefik.http.routers.deviceblade2-secure.tls.certresolver=myresolver"
+
+  infoboardblade2:
+    image: registry.klinkplatform.com/infoboardv2:alpha-latest
+    deploy:
+            #  placement:
+            #    constraints:
+            #      - node.role == worker
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 10s
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.services.infoboardblade2.loadbalancer.server.port=80"
+        - "traefik.http.routers.infoboardblade2.rule=Host(`dev-infoboard.mss.ba`)"
+        - "traefik.http.routers.infoboardblade2.entrypoints=web"
+        - "traefik.http.routers.infoboardblade2.middlewares=traefik-https-redirect@file"
+        - "traefik.http.routers.infoboardblade2-secure.rule=Host(`dev-infoboard.mss.ba`)"
+        - "traefik.http.routers.infoboardblade2-secure.entrypoints=websecure"
+        - "traefik.http.routers.infoboardblade2-secure.tls=true"
+        - "traefik.docker.network=PrviNetwork"
+        - "traefik.http.routers.infoboardblade2-secure.tls.certresolver=myresolver"
+
+  frontendtoolkit:
+    image: registry.klinkplatform.com/frontendtoolkit:alpha-latest
+    deploy:
+            #  placement:
+            #    constraints:
+            #      - node.role == worker
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.services.frontendtoolkit.loadbalancer.server.port=80"
+        - "traefik.http.services.frontendtoolkit.loadbalancer.passHostHeader=true"
+        - "traefik.http.routers.frontendtoolkit.rule=Host(`dev-ftk.mss.ba`)"
+        - "traefik.http.routers.frontendtoolkit.entrypoints=web"
+        - "traefik.http.routers.frontendtoolkit.middlewares=traefik-https-redirect"
+        - "traefik.http.routers.frontendtoolkit-secure.rule=Host(`dev-ftk.mss.ba`)"
+        - "traefik.http.routers.frontendtoolkit-secure.entrypoints=websecure"
+        - "traefik.http.routers.frontendtoolkit-secure.tls=true"
+          #- "traefik.http.routers.frontendtoolkit-secure.middlewares=traefik-auth"
+        - "traefik.docker.network=PrviNetwork"
+        - "traefik.http.routers.frontendtoolkit-secure.tls.certresolver=myresolver"
+networks:
+  default:
+    external:
+      name: PrviNetwork
+configs:
+  nginx-config:
+    file: ./nginx.conf
+  sh30:
+    file: ./30.sh
+

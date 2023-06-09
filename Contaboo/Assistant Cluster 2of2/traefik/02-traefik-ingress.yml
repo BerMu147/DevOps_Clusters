@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: traefik
+  name: traefik-web
+
+spec:
+  entryPoints:
+    - web
+  routes:
+  - kind: Rule
+    match: Host(`dev-k8s.klinkplatform.com`)
+    services:
+    - name: api@internal # Special service created by Traefik pod
+      kind: TraefikService
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  namespace: traefik
+  name: traefik-web-tls
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - kind: Rule
+    match: Host(`dev-k8s.klinkplatform.com`)
+    services:
+    - name: api@internal # Special service created by Traefik pod
+      kind: TraefikService

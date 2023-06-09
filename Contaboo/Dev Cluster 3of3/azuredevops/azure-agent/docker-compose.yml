@@ -1,0 +1,22 @@
+version: "3.7"
+
+networks:
+  azuredevops:
+    external: true
+services:
+  azureself-hosted:
+    image: registry.mss.ba/azureagent-ubuntu-18.04:1373
+          #image: registry.klinkplatform.com/azure-vsts-agent:ubuntu-16.04
+    environment:
+      - AZP_URL=https://mssba.visualstudio.com
+      - AZP_TOKEN=3jtb4xqpx5hjfoprc5a6pefohu7gxwszs6y5yx2f5vqfwxuyhp4q
+      - AZP_POOL=Linux
+      - AZP_AGENT_NAME=ContaboDev
+    networks:
+      - azuredevops
+    deploy:
+      placement:
+        constraints:
+          - node.labels.node_role==worker
+ 
+

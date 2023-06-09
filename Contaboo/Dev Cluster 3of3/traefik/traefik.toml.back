@@ -1,0 +1,59 @@
+#[entryPoints]
+#   [entryPoints.web]
+#	address = ":80"
+#	[entryPoints.web.http.redirections]
+#	   to = "websecure"
+#	   scheme = "https"
+
+entryPoints:
+  web:
+    address = ":80"
+  websecure:
+    address= ":443"
+    [entryPoints.web.http.redirections.entryPoint]
+      to = "websecure"
+      scheme = "https"
+
+#  [entryPoints.websecure]
+#    address = ":443"
+
+  [api]
+    dashboard = true
+
+
+[http.middlewares]
+  [http.middlewares.traefik-https-redirect.redirectscheme]
+    scheme = "https"
+  [http.middlewares.traefik-http-redirect.redirectscheme]
+    scheme = "http"
+
+[log]
+  level = "DEBUG"
+  format = "json"
+
+
+  [acme.httpChallenge]
+    entryPoint = "web"
+
+certificateResolvers:
+    letsEncrypt:
+	acme:
+	   email = "berin.mujcinovic@edu.fit.ba"
+	   storage = "acme.json"
+	   httpChallenge:
+		entryPoint: web
+
+#  [certificatesResolvers.lets-encrypt.acme]
+  email = "berin.mujcinovic@edu.fit.ba"
+  caServer = "https://acme-staging-v02.api.letsencrypt.org/directory"
+  storage = "acme.json"
+  [certificatesResolvers.lets-encrypt.acme.tlsChallenge] 
+ 
+
+  [providers.docker]
+    watch = true
+    swarmMode = true
+    endpoint = "unix:///var/run/docker.sock"
+
+  [providers.file]
+    filename = "traefik.toml"

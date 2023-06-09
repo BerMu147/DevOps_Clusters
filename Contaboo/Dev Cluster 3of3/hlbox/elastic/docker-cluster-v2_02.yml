@@ -1,0 +1,108 @@
+version: '3.7'
+services:
+  elasticsearch1:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+    volumes:
+      - elasticsearch1:/usr/share/elastic/data
+    environment:
+      - node.name=elasticsearch1
+      - cluster.name=hl_second
+      - network.host=0.0.0.0
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+      - discovery.zen.minimum_master_nodes=2
+      - node.master=true
+      - node.ingest=true
+      - node.data=false
+      - discovery.seed_hosts=hl_second_elasticsearch1, hl_second_elasticsearch2
+      - cluster.initial_master_nodes=elasticsearch1,elasticsearch2
+      - "xpack.security.enabled=false"
+    networks:
+      - hl_second_network
+    deploy:
+      replicas: 1
+
+  elasticsearch2:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+    volumes:
+      - elasticsearch2:/usr/share/elastic/data
+    environment:
+      - node.name=elasticsearch2
+      - cluster.name=hl_second
+      - network.host=0.0.0.0
+      - "bootstrap.memory_lock=true"
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+      - discovery.zen.minimum_master_nodes=2
+      - cluster.initial_master_nodes=elasticsearch1,elasticsearchsecond
+      - node.master=true
+      - node.ingest=true
+      - node.data=false
+      - "xpack.security.enabled=false"
+      #- discovery.type=single-node
+      - discovery.seed_hosts=hl_second_elasticsearch1, hl_second_elasticsearch2
+
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    networks:
+      hl_second_network:
+        #aliases:
+        #  - hl_second_elasticsearch1
+    deploy:
+      replicas: 1
+
+  elasticsearchdata1:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+    volumes:
+      - elasticsearch1:/usr/share/elastic/data
+    environment:
+      - node.name=elasticsearchdata1
+      - cluster.name=hl_second
+      - network.host=0.0.0.0
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+      - discovery.zen.minimum_master_nodes=2
+      - node.master=false
+      - node.ingest=false
+      - node.data=true
+      - discovery.seed_hosts=hl_second_elasticsearch1, hl_second_elasticsearch2
+      - "xpack.security.enabled=false"
+    networks:
+      - hl_second_network
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == worker
+
+  elasticsearchdata2:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+    volumes:
+      - elasticsearch2:/usr/share/elastic/data
+    environment:
+      - node.name=elasticsearchdata2
+      - cluster.name=hl_second
+      - network.host=0.0.0.0
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+      - discovery.zen.minimum_master_nodes=2
+      - node.master=false
+      - node.ingest=false
+      - node.data=true
+      - discovery.seed_hosts=hl_second_elasticsearch1, hl_second_elasticsearch2
+      - "xpack.security.enabled=false"
+      #- discovery.type=single-node
+    networks:
+      - hl_second_network
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == worker
+
+
+networks:
+  hl_second_network:
+    external: true
+
+volumes:  
+  elasticsearch1:
+  elasticsearch2:

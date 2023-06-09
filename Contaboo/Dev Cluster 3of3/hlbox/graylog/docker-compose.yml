@@ -1,0 +1,117 @@
+version: '3.7'
+services:
+  graylog:
+    image: graylog/graylog:4.2.8
+    environment:
+      - GRAYLOG_MONGODB_URI=mongodb://hlbox_mongodb:27017/graylog
+      - GRAYLOG_PASSWORD_SECRET=HepoKockice49258
+      - GRAYLOG_ROOT_PASSWORD_SHA2=63a52b702ea2823273b1e7cd10721258543dfea2828357b2986e10156310d692
+      - GRAYLOG_HTTP_BIND_ADDRESS=0.0.0.0:9000
+      - GRAYLOG_ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - GRAYLOG_HTTP_EXTERNAL_URI=https://graylog.mss.ba/
+      - GRAYLOG_WEB_ENDPOINT_URI=https://graylog.mss.ba/
+      - GRAYLOG_IS_MASTER=TRUE
+      - GRAYLOG_REST_URI="http://graylog:9000"
+      - GRAYLOG_LISTEN_URI="http://graylog_graylog:9000"
+      - GRAYLOG_REST_TRANSPORT_URI=https://graylog.mss.ba/api
+    # volumes:
+    #   - graylog:/usr/share/graylog/data
+    networks:
+      - hlbox
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.platform.os == linux
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.graylog.entrypoints=web"
+        - "traefik.http.routers.graylog.rule=Host(`graylog.mss.ba`)"
+        - "traefik.http.routers.graylog.middlewares=traefik-https-redirect@file"
+        - "traefik.http.routers.graylog-secure.entrypoints=websecure"
+        - "traefik.http.routers.graylog-secure.rule=Host(`graylog.mss.ba`)"
+        - "traefik.http.routers.graylog-secure.tls=true"
+        - "traefik.http.services.graylog.loadbalancer.server.port=9000"
+        - "traefik.http.middlewares.graylog-auth.forwardauth.tls.insecureSkipVerify=true"
+        - "traefik.docker.network=hlbox"
+        - "traefik.http.routers.graylog-secure.tls.certresolver=myresolver"
+        - "traefik.http.services.graylog.loadbalancer.sticky=true"
+        - "traefik.http.middlewares.graylog-header2.headers.customrequestheaders.X-Graylog-Server-URL=http://graylog_graylog:9000/"
+        - "traefik.http.routers.graylog.middlewares=graylog-header2"
+        - "traefik.http.routers.graylog-secure.middlewares=graylog-header2"
+    ports:
+      # Syslog TCP
+      - 1514:1514
+      # Syslog UDP
+      - 1514:1514/udp
+      #GELF TCP
+      - 12201:12201
+      #GELF UDP
+      - 12201:12201/udp
+
+  graylog2:
+    image: graylog/graylog:4.2.8
+    hostname: graylog2
+    environment:
+      - GRAYLOG_MONGODB_URI=mongodb://hlbox_mongodb:27017/graylog
+      - GRAYLOG_PASSWORD_SECRET=HepoKockice49258
+      - GRAYLOG_ROOT_PASSWORD_SHA2=63a52b702ea2823273b1e7cd10721258543dfea2828357b2986e10156310d692
+      # - GRAYLOG_HTTP_BIND_ADDRESS=0.0.0.0:9000
+      - GRAYLOG_ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - GRAYLOG_HTTP_EXTERNAL_URI=https://graylog2.mss.ba/
+      - GRAYLOG_WEB_ENDPOINT_URI=https://graylog2.mss.ba/
+      - GRAYLOG_IS_MASTER=FALSE
+      # - GRAYLOG_REST_URI="http://graylog:9000"
+      # - GRAYLOG_REST_LISTEN_URI="http://graylog_graylog2:9000/"
+      # - GRAYLOG_REST_TRANSPORT_URI=https://graylog.mss.ba/api
+      
+    volumes:
+      - graylog2:/usr/share/graylog/data
+    # configs:
+    #   - source: graylog2-config
+    #     target: /usr/share/graylog/data/config/graylog.conf
+    networks:
+      - hlbox
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.platform.os == linux
+      labels:
+        - "traefik.enable=false"
+        - "traefik.http.routers.graylog2.entrypoints=web"
+        - "traefik.http.routers.graylog2.rule=Host(`graylog2.mss.ba`)"
+        - "traefik.http.routers.graylog2.middlewares=traefik-https-redirect@file"
+        - "traefik.http.routers.graylog2-secure.entrypoints=websecure"
+        - "traefik.http.routers.graylog2-secure.rule=Host(`graylog2.mss.ba`)"
+        - "traefik.http.routers.graylog2-secure.tls=true"
+        - "traefik.http.services.graylog2.loadbalancer.server.port=9000"
+        - "traefik.http.middlewares.graylog2-auth.forwardauth.tls.insecureSkipVerify=true"
+        - "traefik.docker.network=hlbox"
+        - "traefik.http.routers.graylog2-secure.tls.certresolver=myresolver"
+        - "traefik.http.services.graylog2.loadbalancer.sticky=true"
+        - "traefik.http.middlewares.graylog-header.headers.customrequestheaders.X-Graylog-Server-URL=http://graylog_graylog2:9000/"
+        - "traefik.http.routers.graylog2.middlewares=graylog-header"
+        - "traefik.http.routers.graylog2-secure.middlewares=graylog-header"
+
+    ports:
+      # Syslog TCP
+      - 1515:1514
+      # Syslog UDP
+      - 1515:1514/udp
+      #GELF TCP
+      - 12202:12201
+      #GELF UDP
+      - 12202:12201/udp
+
+networks:
+  hlbox:
+    external: true
+
+volumes:
+  graylog:
+  graylog2:
+
+configs:
+  graylog2-config:
+    file: ./server.conf

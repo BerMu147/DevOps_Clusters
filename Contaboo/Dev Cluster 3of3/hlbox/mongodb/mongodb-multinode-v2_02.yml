@@ -1,0 +1,71 @@
+version: '3.7'
+
+services:
+  mongo1:
+    hostname: mongo1
+    image: mongo:4.2
+    networks:
+      - hl_second_network
+    #ports:
+    #  - 27020:27017 
+    volumes:
+      - mongodb_data:/data/db
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.hostname == vmi650197.contaboserver.net
+    #command: mongod --replSet hl-mongo-set
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "hl1" ]
+
+  mongo2:
+    hostname: mongo2
+    image: mongo:4.2
+    networks:
+      - hl_second_network
+    #ports:
+    #  - 27021:27017
+    volumes:
+      - mongodb_data:/data/db
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.hostname == vmi650198.contaboserver.net
+    #command: mongod --replSet hl-mongo-set
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "hl1" ]
+
+  mongoinit:
+    image: mongo:4.2
+    networks:
+      - hl_second_network
+        #    deploy:
+        #restart_policy:
+        #condition: "no"
+    # this container will exit after executing the command
+    command: >
+      mongo --host hl_second_mongo1:27017 --eval 
+      '
+      db = (new Mongo("hl_second_mongo1:27017")).getDB("test");
+      config = {
+      "_id" : "hl1",
+      "members" : [
+        {
+          "_id" : 0,
+          "host" : "hl_second_mongo1:27017"
+        },
+        {
+          "_id" : 1,
+          "host" : "hl_second_mongo2:27017"
+        }
+      ]
+      };
+      rs.initiate(config);
+      '
+
+networks:
+  hl_second_network:
+    external: true
+
+volumes:
+  mongodb_data:

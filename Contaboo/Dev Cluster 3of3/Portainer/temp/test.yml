@@ -1,0 +1,47 @@
+version: '3.7'
+
+services:
+  agent:
+    image: portainer/agent
+    environment:
+      AGENT_CLUSTER_ADDR: tasks.agent
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/volumes:/var/lib/docker/volumes
+    networks:
+      - PrviNetwork
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.platform.os == linux
+
+  portainer:
+    image: portainer/portainer
+    command: -H tcp://tasks.agent:9001 --tlsskipverify
+    volumes:
+      - portainer-data:/data
+    networks:
+      - PrviNetwork
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.portainer_portainer.entrypoints=web"
+        - "traefik.http.routers.portainer_portainer.rule=Host(`portainer.mss.ba`)"
+        - "traefik.http.routers.portainer_portainer.middlewares=traefik-https-redirect@file"
+        - "traefik.http.routers.portainer_portainer-secure.entrypoints=websecure"
+        - "traefik.http.routers.portainer_portainer-secure.rule=Host(`portainer.mss.ba`)"
+        - "traefik.http.routers.portainer_portainer-secure.tls=true"
+        - "traefik.http.services.portainer_portainer.loadbalancer.server.port=9000"
+        - "traefik.docker.network=PrviNetwork"
+        - "traefik.http.routers.portainer_portainer-secure.tls.certresolver=myresolver"
+
+networks:
+  PrviNetwork:
+    external: true
+
+volumes:
+  portainer-data: {}
