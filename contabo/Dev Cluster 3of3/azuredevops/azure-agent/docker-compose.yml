@@ -9,7 +9,7 @@ services:
           #image: registry.dev2.com/azure-vsts-agent:ubuntu-16.04
     environment:
       - AZP_URL=https://example.visualstudio.com
-      - AZP_TOKEN=142467217846521642514721426148124128
+      - AZP_TOKEN=112341234123412341234
       - AZP_POOL=Linux
       - AZP_AGENT_NAME=ContaboDev
     networks:
