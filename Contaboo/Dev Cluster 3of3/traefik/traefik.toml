@@ -26,7 +26,7 @@
   format = "json"
 
 [certificatesResolvers.myresolver.acme]
-  email = "berin.mujcinovic@edu.fit.ba"
+  email = "berin.mujcinovic@edu.fit.com"
   storage = "acme.json"
   #caServer = "https://acme-staging-v02.api.letsencrypt.org/directory"
   [certificatesResolvers.myresolver.acme.tlsChallenge]

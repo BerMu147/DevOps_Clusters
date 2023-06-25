@@ -2,7 +2,7 @@ version: '3.3'
 
 services:
   godaddyproxy:
-    image:  registry.example.ba/azuredevops-terraform-godaddy-facade:0.1.0
+    image:  registry.example.com/azuredevops-terraform-godaddy-facade:0.1.0
     deploy:
       replicas: 1
       update_config:
@@ -12,10 +12,10 @@ services:
         - "traefik.enable=true"
         - "traefik.http.services.godaddyproxy.loadbalancer.server.port=80"
         - "traefik.http.services.godaddyproxy.loadbalancer.passHostHeader=true"
-        - "traefik.http.routers.godaddyproxy.rule=Host(`godaddy.example.ba`)"
+        - "traefik.http.routers.godaddyproxy.rule=Host(`godaddy.example.com`)"
         - "traefik.http.routers.godaddyproxy.entrypoints=web"
         - "traefik.http.routers.godaddyproxy.middlewares=traefik-https-redirect"
-        - "traefik.http.routers.godaddyproxy-secure.rule=Host(`godaddy.example.ba`)"
+        - "traefik.http.routers.godaddyproxy-secure.rule=Host(`godaddy.example.com`)"
         - "traefik.http.routers.godaddyproxy-secure.entrypoints=websecure"
         - "traefik.http.routers.godaddyproxy-secure.tls=true"
         - "traefik.docker.network=Network1"

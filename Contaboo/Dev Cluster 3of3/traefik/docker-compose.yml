@@ -41,7 +41,7 @@ services:
         - "traefik.enable=true"
         - "traefik.http.routers.traefik.entrypoints=web"
         - "traefik.http.routers.traefik.rule=Host(`dev-traefik.example.com`)"
-        - "traefik.http.middlewares.traefik-auth.basicauth.users=berin:berin:$$apr1$$.7eUdHF4$$wYMz4Ju83cqLxpUd1tgdP."
+        - "traefik.http.middlewares.traefik-auth.comsicauth.users=berin:berin:$$apr1$$.7eUdHF4$$wYMz4Ju83cqLxpUd1tgdP."
           #-"traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme=https"
           #- "traefik.http.routers.traefik.middlewares=traefik-https-redirect@file"
         - "traefik.http.routers.traefik-secure.entrypoints=websecure"

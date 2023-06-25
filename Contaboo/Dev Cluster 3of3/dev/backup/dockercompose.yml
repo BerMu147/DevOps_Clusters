@@ -29,8 +29,8 @@ services:
     environment:
       - GRAYLOG_PASSWORD_SECRET=HepoKockice49258
       - GRAYLOG_ROOT_PASSWORD_SHA2=63a52b702ea2823273b1e7cd10721258543dfea2828357b2986e10156310d692
-      - GRAYLOG_HTTP_EXTERNAL_URI=https://graylog.example.ba/
-      - GRAYLOG_WEB_ENDPOINT_URI=https://graylog.example.ba/
+      - GRAYLOG_HTTP_EXTERNAL_URI=https://graylog.example.com/
+      - GRAYLOG_WEB_ENDPOINT_URI=https://graylog.example.com/
     volumes:
       - graylog_data_config:/usr/share/graylog/data/config
     deploy:
@@ -41,10 +41,10 @@ services:
       labels:
         - "traefik.enable=true"
         - "traefik.http.routers.graylog.entrypoints=web"
-        - "traefik.http.routers.graylog.rule=Host(`graylog.example.ba`)"
+        - "traefik.http.routers.graylog.rule=Host(`graylog.example.com`)"
         - "traefik.http.routers.graylog.middlewares=traefik-https-redirect@file"
         - "traefik.http.routers.graylog-secure.entrypoints=websecure"
-        - "traefik.http.routers.graylog-secure.rule=Host(`graylog.example.ba`)"
+        - "traefik.http.routers.graylog-secure.rule=Host(`graylog.example.com`)"
         - "traefik.http.routers.graylog-secure.tls=true"
         - "traefik.http.services.graylog.loadbalancer.server.port=9000"
         - "traefik.http.middlewares.graylog-auth.forwardauth.tls.insecureSkipVerify=true"

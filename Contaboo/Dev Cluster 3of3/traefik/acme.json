@@ -1,12 +1,12 @@
 {
   "myresolver": {
     "Account": {
-      "Email": "berin.mujcinovic@edu.fit.ba",
+      "Email": "berin.mujcinovic@edu.fit.com",
       "Registration": {
         "body": {
           "status": "valid",
           "contact": [
-            "mailto:berin.mujcinovic@edu.fit.ba"
+            "mailto:berin.mujcinovic@edu.fit.com"
           ]
         },
         "uri": "https://acme-v02.api.letsencrypt.org/acme/acct/948289796"

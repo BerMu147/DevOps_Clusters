@@ -38,13 +38,13 @@ entryPoints:
 certificateResolvers:
     letsEncrypt:
 	acme:
-	   email = "berin.mujcinovic@edu.fit.ba"
+	   email = "berin.mujcinovic@edu.fit.com"
 	   storage = "acme.json"
 	   httpChallenge:
 		entryPoint: web
 
 #  [certificatesResolvers.lets-encrypt.acme]
-  email = "berin.mujcinovic@edu.fit.ba"
+  email = "berin.mujcinovic@edu.fit.com"
   caServer = "https://acme-staging-v02.api.letsencrypt.org/directory"
   storage = "acme.json"
   [certificatesResolvers.lets-encrypt.acme.tlsChallenge] 
