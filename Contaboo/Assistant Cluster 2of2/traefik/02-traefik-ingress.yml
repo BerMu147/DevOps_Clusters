@@ -9,7 +9,7 @@ spec:
     - web
   routes:
   - kind: Rule
-    match: Host(`dev-k8s.klinkplatform.com`)
+    match: Host(`dev-k8s.example.com`)
     services:
     - name: api@internal # Special service created by Traefik pod
       kind: TraefikService
@@ -24,7 +24,7 @@ spec:
     - websecure
   routes:
   - kind: Rule
-    match: Host(`dev-k8s.klinkplatform.com`)
+    match: Host(`dev-k8s.example.com`)
     services:
     - name: api@internal # Special service created by Traefik pod
       kind: TraefikService
