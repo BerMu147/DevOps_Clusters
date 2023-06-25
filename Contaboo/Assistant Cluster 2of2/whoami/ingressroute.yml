@@ -7,7 +7,7 @@ spec:
   entryPoints:
     - web
   routes:
-  - match: Host(`dev-k8s.klinkplatform.com`) && PathPrefix(`/notls`)
+  - match: Host(`dev-k8s.example.com`) && PathPrefix(`/notls`)
     kind: Rule
     services:
     - name: whoami
@@ -23,7 +23,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-  - match: Host(`dev-k8s.klinkplatform.com`) && PathPrefix(`/tls`)
+  - match: Host(`dev-k8s.example.com`) && PathPrefix(`/tls`)
     kind: Rule
     services:
     - name: whoami
