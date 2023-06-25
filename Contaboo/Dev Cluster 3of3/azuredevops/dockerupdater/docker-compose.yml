@@ -6,24 +6,24 @@ networks:
 
 services:
   azurepipeline-dockerupdater-facade:
-    image: registry.mss.ba/azuredevops-dockerupdater-facade:0.1.0
+    image: registry.example.ba/azuredevops-dockerupdater-facade:0.1.0
     environment:
       - "ASPNETCORE_ENVIRONMENT=Production"
-      - "DU_DOCKER_REGISTRY_USERNAME=mss1337regs"
-      - "DU_DOCKER_REGISTRY_PASSWORD=mg3ds.5SGY@cbc2@4acsda"
+      - "DU_DOCKER_REGISTRY_USERNAME=example1"
+      - "DU_DOCKER_REGISTRY_PASSWORD=mg3ds"
       - "DU_DOCKER_PIPE=unix:///var/run/docker.sock"
       - "DU_AUTH_KEY=vasdfnomto&&ffsfcm@mdsa-0fs02"
     networks:
       - azuredevops
     deploy:
       labels:
-        - "mss.azuredevops.ci=Utils_AzureDevOps_Docker_Updater.prod.ci"
+        - "example.azuredevops.ci=Utils_AzureDevOps_Docker_Updater.prod.ci"
         - "traefik.enable=false"
         - "traefik.http.services.devopsasaservice-dockerupdater-facade.loadbalancer.server.port=80"
-        - "traefik.http.routers.devopsasaservice-dockerupdater-facade-http.rule=Host(`dev-du.mss.ba`)"
+        - "traefik.http.routers.devopsasaservice-dockerupdater-facade-http.rule=Host(`dev-du.example.ba`)"
         - "traefik.http.routers.devopsasaservice-dockerupdater-facade-http.entrypoints=web"
         - "traefik.http.routers.devopsasaservice-dockerupdater-facade-http.middlewares=traefik-https-redirect@file"
-        - "traefik.http.routers.devopsasaservice-dockerupdater-facade-secure.rule=Host(`dev-du.mss.ba`)"
+        - "traefik.http.routers.devopsasaservice-dockerupdater-facade-secure.rule=Host(`dev-du.example.ba`)"
         - "traefik.http.routers.devopsasaservice-dockerupdater-facade-secure.entrypoints=websecure"
         - "traefik.http.routers.devopsasaservice-dockerupdater-facade-secure.tls=true"
       placement:

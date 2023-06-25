@@ -5,11 +5,11 @@ networks:
     external: true
 services:
   azureself-hosted:
-    image: registry.mss.ba/azureagent-ubuntu-18.04:1373
-          #image: registry.klinkplatform.com/azure-vsts-agent:ubuntu-16.04
+    image: registry.example.com/azureagent-ubuntu-18.04:1373
+          #image: registry.dev2.com/azure-vsts-agent:ubuntu-16.04
     environment:
-      - AZP_URL=https://mssba.visualstudio.com
-      - AZP_TOKEN=3jtb4xqpx5hjfoprc5a6pefohu7gxwszs6y5yx2f5vqfwxuyhp4q
+      - AZP_URL=https://example.visualstudio.com
+      - AZP_TOKEN=142467217846521642514721426148124128
       - AZP_POOL=Linux
       - AZP_AGENT_NAME=ContaboDev
     networks:

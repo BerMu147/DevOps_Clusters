@@ -3,10 +3,8 @@ services:
   traefik:
     image: traefik:v2.5.2
     networks:
-      - PrviNetwork
+      - Network1
       - docker-registry
-      - hlbox
-      #- hl_second_network
       - portainer_agent_network
     ports:
       - 80:80
@@ -42,12 +40,12 @@ services:
       labels:
         - "traefik.enable=true"
         - "traefik.http.routers.traefik.entrypoints=web"
-        - "traefik.http.routers.traefik.rule=Host(`dev-traefik.mss.ba`)"
+        - "traefik.http.routers.traefik.rule=Host(`dev-traefik.example.com`)"
         - "traefik.http.middlewares.traefik-auth.basicauth.users=berin:berin:$$apr1$$.7eUdHF4$$wYMz4Ju83cqLxpUd1tgdP."
           #-"traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme=https"
           #- "traefik.http.routers.traefik.middlewares=traefik-https-redirect@file"
         - "traefik.http.routers.traefik-secure.entrypoints=websecure"
-        - "traefik.http.routers.traefik-secure.rule=Host(`dev-traefik.mss.ba`)"
+        - "traefik.http.routers.traefik-secure.rule=Host(`dev-traefik.example.com`)"
           #- "traefik.http.routers.traefik-secure.middlewares=traefik-auth
         - "traefik.http.routers.traefik-secure.tls=true"
         - "traefik.http.routers.traefik-secure.service=api@internal"
@@ -55,14 +53,10 @@ services:
         - "traefik.http.routers.traefik-secure.tls.certresolver=myresolver"
 
 networks:
-  PrviNetwork:
-    external: true
   docker-registry:
     external: true
-  hlbox:
+  Network1:
     external: true
-  #hl_second_network:
-  #  external: true
   portainer_agent_network:
     external: true
 

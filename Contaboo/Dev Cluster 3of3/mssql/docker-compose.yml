@@ -11,7 +11,7 @@ services:
     deploy:
       placement:
         constraints:
-          - node.hostname == vmi650196.contaboserver.net
+          - node.hostname == vmi1.contaboserver.net
       labels:
         - traefik.enable=true
         - traefik.tcp.routers.msql.rule=HostSNI(`*`)
@@ -24,6 +24,6 @@ services:
 networks:
   default:
     external:
-      name: PrviNetwork
+      name: Network1
 volumes:
   mssql_data:

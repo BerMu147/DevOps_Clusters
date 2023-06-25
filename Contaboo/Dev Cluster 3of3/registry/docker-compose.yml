@@ -14,10 +14,10 @@ services:
       - "traefik.enable=true"
       - "traefik.http.services.registry.loadbalancer.server.port=80"
       - "traefik.http.services.registry.loadbalancer.passHostHeader=true"
-      - "traefik.http.routers.registry.rule=Host(`registry.mss.ba`)"
+      - "traefik.http.routers.registry.rule=Host(`registry.example.ba`)"
       - "traefik.http.routers.registry.entrypoints=web"
       - "traefik.http.routers.registry.middlewares=traefik-https-redirect"
-      - "traefik.http.routers.registry-secure.rule=Host(`registry.mss.ba`)"
+      - "traefik.http.routers.registry-secure.rule=Host(`registry.example.ba`)"
       - "traefik.http.routers.registry-secure.entrypoints=websecure"
       - "traefik.http.routers.registry-secure.tls=true"
         #- "traefik.http.routers.registry-secure.middlewares=traefik-auth"
@@ -32,7 +32,7 @@ services:
     deploy:
       placement:
         constraints:
-          - node.hostname ==  vmi650196.contaboserver.net
+          - node.hostname ==  vmi1.contaboserver.net
 networks:
   docker-registry:
     external: true

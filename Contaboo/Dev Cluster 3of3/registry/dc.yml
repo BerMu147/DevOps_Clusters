@@ -12,7 +12,7 @@ services:
     deploy:
       placement:
         constraints:
-          - node.hostname == vmi650196.contaboserver.net
+          - node.hostname == vmi1.contaboserver.net
       replicas: 1
       update_config:
         parallelism: 2
@@ -21,13 +21,13 @@ services:
         - "traefik.enable=true"
         - "traefik.http.services.dc_registry.loadbalancer.server.port=5000"
         - "traefik.http.services.dc_registry.loadbalancer.passHostHeader=true"
-        - "traefik.http.routers.dc_registry.rule=Host(`registry.mss.ba`)"
+        - "traefik.http.routers.dc_registry.rule=Host(`registry.example.ba`)"
         - "traefik.http.routers.dc_registry.entrypoints=web"
         - "traefik.http.routers.dc_registry.middlewares=traefik-https-redirect"
-        - "traefik.http.routers.dc_registry-secure.rule=Host(`registry.mss.ba`)"
+        - "traefik.http.routers.dc_registry-secure.rule=Host(`registry.example.ba`)"
         - "traefik.http.routers.dc_registry-secure.entrypoints=websecure"
         - "traefik.http.routers.dc_registry-secure.tls=true"
-        - "traefik.docker.network=PrviNetwork"
+        - "traefik.docker.network=Network1"
         - "traefik.http.routers.dc_registry-secure.tls.certresolver=myresolver"
     volumes:
       - datadrive:/data
@@ -43,7 +43,7 @@ secrets:
 networks:
   default:
     external:
-      name: PrviNetwork
+      name: Network1
 volumes:
   datadrive:
 

@@ -680,7 +680,7 @@ tlsOptions: {}
 tlsStore:
   default:
     defaultCertificate:
-      secretName: default-klinkplatform
+      secretName: default-dev2
 
 # Options for the main traefik service, where the entrypoints traffic comes
 # from.
