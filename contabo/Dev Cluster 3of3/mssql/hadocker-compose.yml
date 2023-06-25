@@ -1,0 +1,39 @@
+version: "3.9"
+services:
+  msql:
+    image: registry.example.com/mssql:playground-2
+    hostname: sqlNode1
+    ports:
+      - "5556:1433"
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=k0h4mTk32d6
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == vmi2.contaboserver.net
+    volumes:
+      - mssql-server-linux-datadb1:/var/opt/mssql/data/sqlNode1
+  msql2:
+    image: registry.example.com/mssql:playground-2
+    hostname: sqlNode2
+    ports:
+      - "5557:1433"
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=k0h4mTk32d6
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == vmi2.contaboserver.net
+    volumes:
+      - mssql-server-linux-datadb2:/var/opt/mssql/data/sqlNode2
+networks:
+  default:
+    external:
+      name: Network1
+
+volumes:
+  mssql-server-linux-datadb1:
+  mssql-server-linux-datadb2:
+  

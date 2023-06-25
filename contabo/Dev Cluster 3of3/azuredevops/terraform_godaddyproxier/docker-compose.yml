@@ -1,0 +1,30 @@
+version: "3.7"
+
+services:
+  godaddyproxier-facade:
+    image: registry.example.com/azuredevops-terraform-godaddy-facade:0.1.0
+    environment:
+      - "ASPNETCORE_ENVIRONMENT=Production"
+    deploy:
+      labels:
+        - "example.azuredevops.ci=Utils_TerraForm_GoDaddyProxier.prod.ci"
+        - "traefik.enable=true"
+        - "traefik.http.services.godaddyproxier.loadbalancer.server.port=80"
+        - "traefik.http.services.godaddyproxier.loadbalancer.passHostHeader=true"        
+        - "traefik.http.routers.godaddyproxier.rule=Host(`godaddy.example.com`)"
+        - "traefik.http.routers.godaddyproxier.entrypoints=web"
+        - "traefik.http.routers.godaddyproxier.middlewares=traefik-https-redirect"
+        - "traefik.http.routers.godaddyproxier-secure.rule=Host(`godaddy.example.com`)"
+        - "traefik.http.routers.godaddyproxier-secure.entrypoints=websecure"
+        - "traefik.http.routers.godaddyproxier-secure.tls=true"
+        - "traefik.docker.network=Network1"
+        - "traefik.http.routers.godaddyproxier-secure.tls.certresolver=myresolver"
+      placement:
+        constraints:
+          - node.role==worker
+
+networks:
+  default:
+    external:
+      name: Network1
+

@@ -1,0 +1,44 @@
+[entryPoints]
+  [entryPoints.mssql]
+    address = ":4444"
+  [entryPoints.web]
+    address = ":80"
+  [entryPoints.websecure]
+    address = ":443"
+    [entryPoints.web.http.redirections.entryPoint]
+      to = "websecure"
+      scheme = "https"
+  [entryPoints.portainer_portainer]
+    address = ":8000"
+
+  [api]
+    dashboard = true
+
+
+[http.middlewares]
+  [http.middlewares.traefik-https-redirect.redirectscheme]
+    scheme = "https"
+  [http.middlewares.traefik-http-redirect.redirectscheme]
+    scheme = "http"
+
+[log]
+  level = "DEBUG"
+  format = "json"
+
+[certificatesResolvers.myresolver.acme]
+  email = "berin.mujcinovic@edu.fit.com"
+  storage = "acme.json"
+  #caServer = "https://acme-staging-v02.api.letsencrypt.org/directory"
+  [certificatesResolvers.myresolver.acme.tlsChallenge]
+    [certificatesResolvers.letsencrypt.acme.httpChallenge]
+    # used during the challenge
+      entryPoint = "web"
+    [certificatesResolvers.letsencrypt.acme.dnsChallenge]
+      provider = "cloudflare"
+  [providers.docker]
+    watch = true
+    swarmMode = true
+    endpoint = "unix:///var/run/docker.sock"
+
+  [providers.file]
+    filename = "traefik.toml"

@@ -1,0 +1,27 @@
+version: '3.7'
+services:
+  mongodb:
+    image: mongo:4.2
+    volumes:
+      - mongodb:/data/db
+    #environment:
+    #  MONGO_INITDB_DATABASE: graylog
+    #  MONGO_INITDB_ROOT_USERNAME: admin
+    #  MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - 27017:27017
+    networks:
+      - Network1
+    restart: "on-failure"
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.hostname == vmi2.contaboserver.net
+          
+volumes:
+  mongodb:
+
+networks:
+  Network1:
+    external: true

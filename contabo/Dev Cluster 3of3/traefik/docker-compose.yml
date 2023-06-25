@@ -1,0 +1,65 @@
+version: "3.4"
+services:
+  traefik:
+    image: traefik:v2.5.2
+    networks:
+      - Network1
+      - docker-registry
+      - portainer_agent_network
+    ports:
+      - 80:80
+      - 443:443
+      - 4444:4444
+      # - 4455:4455
+      # - 8000:8000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /root/traefik/acme.json:/acme.json
+    command:
+      - '--certificatesresolvers.le.acme.dnschallenge=true'
+      - '--certificatesresolvers.le.acme.dnschallenge.provider=cloudflare'
+      - '--entrypoints.mssql.address=:4444'
+      - '--entrypoints.portainer_portainer.address=:8000'
+
+    environment:
+      # you may choose to use secrets instead of environment variables like this
+      - CF_API_EMAIL=ibrahim.susic@hotmail.com
+      - CF_API_KEY=NNdGkgJM6NZ25Sk3EasajoHcg8jGVIWjbePHaEoq
+    configs:
+      - source: traefik-config
+        target: /traefik.toml
+    deploy:
+      mode: global
+      placement:
+        constraints: [node.role==manager]
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.traefik.entrypoints=web"
+        - "traefik.http.routers.traefik.rule=Host(`dev-traefik.example.com`)"
+        - "traefik.http.middlewares.traefik-auth.comsicauth.users=berin:berin:$$apr1$$.7eUdHF4$$wYMz4Ju83cqLxpUd1tgdP."
+          #-"traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme=https"
+          #- "traefik.http.routers.traefik.middlewares=traefik-https-redirect@file"
+        - "traefik.http.routers.traefik-secure.entrypoints=websecure"
+        - "traefik.http.routers.traefik-secure.rule=Host(`dev-traefik.example.com`)"
+          #- "traefik.http.routers.traefik-secure.middlewares=traefik-auth
+        - "traefik.http.routers.traefik-secure.tls=true"
+        - "traefik.http.routers.traefik-secure.service=api@internal"
+        - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+        - "traefik.http.routers.traefik-secure.tls.certresolver=myresolver"
+
+networks:
+  docker-registry:
+    external: true
+  Network1:
+    external: true
+  portainer_agent_network:
+    external: true
+
+configs:
+  traefik-config:
+    file: ./traefik.toml

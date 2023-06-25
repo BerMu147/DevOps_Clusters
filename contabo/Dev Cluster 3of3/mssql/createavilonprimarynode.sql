@@ -1,0 +1,22 @@
+CREATE AVAILABILITY GROUP [AG1]
+    WITH (CLUSTER_TYPE = NONE)
+    FOR REPLICA ON
+    N'sqlNode1'
+        WITH (
+        ENDPOINT_URL = N'tcp://sqlNode1:5022',
+        AVAILABILITY_MODE = ASYNCHRONOUS_COMMIT,
+            SEEDING_MODE = AUTOMATIC,
+            FAILOVER_MODE = AUTOMATIC,
+        SECONDARY_ROLE (ALLOW_CONNECTIONS = ALL)
+            ),
+    N'sqlNode2'
+        WITH (
+        ENDPOINT_URL = N'tcp://sqlNode2:5022',
+        AVAILABILITY_MODE = ASYNCHRONOUS_COMMIT,
+            SEEDING_MODE = AUTOMATIC,
+            FAILOVER_MODE = AUTOMATIC,
+        SECONDARY_ROLE (ALLOW_CONNECTIONS = ALL)
+            )
+
+
+            DATABASE COMA put in AG1

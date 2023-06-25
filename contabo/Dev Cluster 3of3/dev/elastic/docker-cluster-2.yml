@@ -1,0 +1,111 @@
+version: '3.7'
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+    volumes:
+      - elasticsearch:/usr/share/elastic/data
+    environment:
+      - node.name=elasticsearchfirst
+      - cluster.name=dev
+      # - transport.host=localhost
+      - network.host=0.0.0.0
+      # - http.host=0.0.0.0
+      # - "bootstrap.memory_lock=true"
+      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+      - discovery.zen.minimum_master_nodes=2
+      - node.master=true
+      - node.ingest=true
+      - node.data=false
+      - discovery.seed_hosts=dev_elasticsearch, dev_elasticsearch2
+      - cluster.initial_master_nodes=elasticsearchfirst,elasticsearchsecond
+      # - "discovery.type=single-node"
+      - "xpack.security.enabled=false"
+    networks:
+      - Network1
+  elasticsearch2:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+    volumes:
+      - elasticsearch2:/usr/share/elastic/data
+    environment:
+      - node.name=elasticsearchsecond
+      - cluster.name=dev
+      # - transport.host=localhost
+      - network.host=0.0.0.0
+      # - http.host=0.0.0.0
+      - "bootstrap.memory_lock=true"
+      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+      - discovery.zen.minimum_master_nodes=2
+      - cluster.initial_master_nodes=elasticsearchfirst,elasticsearchsecond
+      - node.master=true
+      - node.ingest=true
+      - node.data=false
+      # - "discovery.type=single-node"
+      - "xpack.security.enabled=false"
+      - discovery.seed_hosts=dev, dev_elasticsearch2
+
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    networks:
+      Network1:
+        aliases:
+          - Network1_elasticsearch
+    deploy:
+      replicas: 1
+  elasticsearchdata:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+    volumes:
+      - elasticsearch:/usr/share/elastic/data
+    environment:
+      - node.name=elasticsearchdata
+      - cluster.name=dev
+      # - transport.host=localhost
+      - network.host=0.0.0.0
+      # - http.host=0.0.0.0
+      # - "bootstrap.memory_lock=true"
+      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+      - discovery.zen.minimum_master_nodes=2
+      - node.master=false
+      - node.ingest=false
+      - node.data=true
+      # - "discovery.type=single-node"
+      - discovery.seed_hosts=dev_elasticsearch, dev_elasticsearch2
+      - "xpack.security.enabled=false"
+    networks:
+      - Network1
+    deploy:
+      replicas: 1
+  elasticsearchdata2:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+    volumes:
+      - elasticsearch:/usr/share/elastic/data
+    environment:
+      - node.name=elasticsearchdata2
+      - cluster.name=Network1
+      # - transport.host=localhost
+      - network.host=0.0.0.0
+      # - http.host=0.0.0.0
+      # - "bootstrap.memory_lock=true"
+      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+      - discovery.zen.minimum_master_nodes=2
+      - node.master=false
+      - node.ingest=false
+      #- node.role=data
+      - node.data=true
+      # - "discovery.type=single-node"
+      - discovery.seed_hosts=dev_elasticsearch, dev_elasticsearch2
+      - "xpack.security.enabled=false"
+    networks:
+      - Network1
+    deploy:
+      replicas: 1
+
+
+networks:
+  Network1:
+    external: true
+
+volumes:  
+  elasticsearch:
+  elasticsearch2:

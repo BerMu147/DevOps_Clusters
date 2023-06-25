@@ -1,0 +1,6 @@
+      #EDGE
+        - traefik.http.routers.portainer_edge_agent.rule=Host(`edge.portainer.example.com`)
+        - traefik.http.services.portainer_edge_agent.loadbalancer.server.port=8000
+        - traefik.http.routers.portainer_edge_agent.service=portainer_edge_agent
+        - traefik.http.routers.http.middlewares=portainer_edge_agent-redirect
+        - traefik.http.services.http.loadbalancer.server.port=80
