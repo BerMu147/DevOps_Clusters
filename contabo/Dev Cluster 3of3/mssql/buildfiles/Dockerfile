@@ -5,8 +5,6 @@ EXPOSE 5022
 LABEL  "MAINTAINER" "Enrique Catalá <enrique@enriquecatala.com> | <ecatala@solidq.com> | @enriquecatala"
 LABEL "Project" "SQL Server 2017 AlwaysOn Demo Node"
 LABEL "BASE_GITHUB" "https://github.com/enriquecatala/sqlserver-docker-alwayson"
-LABEL "MODIFIER" "Armin Comic"
-
 
 ENV ACCEPT_EULA=Y
 ENV SA_PASSWORD="k0h4mTk32d6"
