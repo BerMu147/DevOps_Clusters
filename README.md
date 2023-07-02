@@ -8,4 +8,6 @@ Linux VMI are used for this work, as the files indicate
 
 This directory contains files that were related to company resources, but without exact data.
 
-Examples and code snippets are free for use if they can help
+Examples and code snippets are free for use if they can help. 
+
+Check / Refer to instructions.md file for better understanding and overview of Clusters.
