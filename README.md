@@ -1,13 +1,9 @@
-# 2 Clusters
+# Contabo for service and container management
 
-Work that was done as DevOps so far.
+Linux VMI are used for work, as the files indicate
+- Cluster of 3 nodes (dev-main)
+- Cluster of 2 nodes (dev-assistant)
 
-Linux VMI are used for this work, as the files indicate
-- Cluster of 3 nodes (dev)
-- Cluster of 2 nodes (assistant)
+Examples and code snippets are free for use. 
 
-This directory contains files that were related to company resources, but without exact data.
-
-Examples and code snippets are free for use if they can help. 
-
-Check / Refer to instructions.md file for better understanding and overview of Clusters.
+Refer to overview.md for Repository content overview
