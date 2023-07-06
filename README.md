@@ -15,11 +15,11 @@ In Dev Cluster it is possible to find configuration for various kind of services
 Traefik, Portainer, Graylog and Fluent plugin, Elastic, MongoDB, Nginx.
 
 
-MSS Directory contains NGINX related files like config, Shell script and docker compose. 
+- MSS Directory contains NGINX related files like config, Shell script and docker compose. 
 
-Portainer Directory contains various setup examples and versions of Portainer service.
+* Portainer Directory contains various setup examples and versions of Portainer service.
 
-azuredevops Cirectory contains setup of GoDaddy Updater for Azure DevOps registry.
+/azuredevops Cirectory contains setup of GoDaddy Updater for Azure DevOps registry.
 
 dev Directory contains separate application services that were used as centralised logging. You can find setup for Graylog, MongoDB and ElasticSearch services.
 
